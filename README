@@ -1,0 +1,10 @@
+Welcome to the repository for puppet manifests to manage Cloudera Hadoop distribution
+
+Puppet is open source platform for system change and compliance management. Cloudera is company, which produced leading distribution for Hadoop ecosystem, which includes Hadoop common, HBase, zookeeper, oozie etc.
+
+These manifests could be used to deploy and manage Cloudera hadoop distribution. Currently it know to deploy HDFS, M/R, Hbase, Zookeeper, Hive, Pig, Hue.
+
+The package is available under Apache license.
+
+
+Enjoy!
