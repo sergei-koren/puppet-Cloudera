@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+<property>
+<name>fs.default.name</name>
+<value>hdfs://<%=namenode_name%>:54310</value>
+</property>
+<property>
+<name>hadoop.tmp.dir</name>
+<value><%=hadoop_tmp_dir%></value>
+</property>
+<property>
+  <name>io.compression.codecs</name>
+  <value>org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.BZip2Codec,com.hadoop.compression.lzo.LzopCodec,com.hadoop.compression.lzo.LzoCodec</value>
+  <description>A list of the compression codec classes that can be used
+               for compression/decompression.</description>
+</property>
+ <property>
+    <name>io.compression.codec.lzo.class</name>
+    <value>com.hadoop.compression.lzo.LzoCodec</value>
+  </property>
+
+ <property>
+    <name>fs.inmemory.size.mb</name>
+    <value>200</value>
+  </property>
+
+ <property>
+    <name>mapreduce.task.io.sort.factor</name>
+    <value>100</value>
+  </property>
+
+ <property>
+    <name>mapreduce.task.io.sort.mb</name>
+    <value>200</value>
+  </property>
+
+ <property>
+    <name>io.file.buffer.size</name>
+    <value>131072</value>
+  </property>
+
+<property>
+    <name>fs.trash.interval</name>
+    <value>10080</value>
+</property>
+
+</configuration>

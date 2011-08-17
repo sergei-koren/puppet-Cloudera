@@ -1,0 +1,128 @@
+# /etc/puppet/modules/hbase/manifests/init.pp
+
+class hbase::common {
+
+
+	include hdfs::common
+
+    package {"hbase-common":
+	name => "hadoop-hbase",
+	ensure => installed,
+}
+
+    file { "hbase-hadoop-metrics.properties":
+	path	=> "${hbase_conf_path}/hadoop-metrics.properties",
+        owner   => root,
+        group   => root,
+        mode    => 664,
+        content  => template("hbase/hadoop-metrics.properties.erb"),
+        require => Package["hbase-common"],
+    }
+    file { "hbase-env.sh":
+        path    => "${hbase_conf_path}/hbase-env.sh",
+        owner   => root,
+        group   => root,
+        mode    => 755,
+        source  => "puppet:///hbase/hbase-env.sh",
+        require => Package["hbase-common"],
+    }
+    file { "hbase-site.xml":
+        path    => "${hbase_conf_path}/hbase-site.xml",
+        owner   => root,
+        group   => root,
+        mode    => 664,
+        content  => template("hbase/hbase-site.xml.erb"),
+        require => Package["hbase-common"],
+    }
+    file { "hbase-log4j.properties":
+        path    => "${hbase_conf_path}/log4j.properties",
+        owner   => root,
+        group   => root,
+        mode    => 664,
+        source  => "puppet:///hbase/log4j.properties",
+        require => Package["hbase-common"],
+    }
+
+    file { "tohtml.xsl":
+        path    => "${hbase_conf_path}/tohtml.xsl",
+        owner   => root,
+        group   => root,
+        mode    => 664,
+        source  => "puppet:///hbase/tohtml.xsl",
+        require => Package["hbase-common"],
+    }
+    file { "hbase-jar":
+        path    => "/usr/lib/hadoop/lib/hbase-${hbase_version}.jar",
+        ensure    => symlink,
+        target  => "/usr/lib/hbase/hbase-${hbase_version}.jar",
+        require => Package["hbase-common"],
+    }
+    file { "hbase-native":
+        path    => "/usr/lib/hbase/lib/native",
+        ensure    => symlink,
+        target  => "/usr/lib/hadoop/lib/native",
+        require => Package["hbase-common"],
+    }
+    file { "hbase-lzo-jar":
+        path    => "/usr/lib/hbase/lib/hadoop-lzo.jar",
+        ensure    => symlink,
+        target  => "/usr/lib/hadoop/lib/hadoop-lzo.jar",
+        require => Package["hbase-common"],
+    }
+
+
+
+
+}
+
+class hbase::regionserver inherits hbase::common {
+
+package {"hbase-regionserver":
+
+	name	=> "hadoop-hbase-regionserver",
+	ensure	=> installed,
+}
+service {"hbase-regionserver":
+	
+	name	=> "hadoop-hbase-regionserver",
+	ensure	=> running,
+        hasstatus => true,  # status does not work in B3
+        hasrestart => true,
+	require	=> Package ['hbase-regionserver'],
+}
+}
+
+class hbase::thriftserver inherits hbase::common {
+package {"hbase-thriftserver":
+
+        name    => "hadoop-hbase-thrift",
+        ensure  => installed,
+}
+service {"hbase-thriftserver":
+
+        name    => "hadoop-hbase-thrift",
+        ensure  => running,
+        hasstatus => true, #status does not work for thrift server
+        hasrestart => true,
+        require => Package ['hbase-thriftserver'],
+}
+}
+
+class hbase::masterserver inherits hbase::common {
+
+package {"hadoop-hbase-master":
+
+        name    => "hadoop-hbase-master",
+        ensure  => installed,
+}
+service {"hadoop-hbase-master":
+
+        name    => "hadoop-hbase-master",
+        ensure  => running,
+        hasstatus => true,
+        hasrestart => true,
+        require => Package ['hadoop-hbase-master'],
+
+}
+
+}

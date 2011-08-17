@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+/**
+ * Copyright 2009 The Apache Software Foundation
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<configuration>
+
+<!-- NEEDED WHETHER OR NOT YOU ARE RUNNING OVER HDFS -->
+<property>
+  <name>hbase.cluster.distributed</name>
+  <value>true</value>
+  <description>For psuedo-distributed, you want to set this to true.
+  false means that HBase tries to put Master + RegionServers in one process.
+  Pseudo-distributed = seperate processes/pids</description>
+</property> <property>
+  <name>hbase.regionserver.hlog.replication</name>
+  <value>3</value>
+  <description>For HBase to offer good data durability, we roll logs if
+  filesystem replication falls below a certain amount.  In psuedo-distributed
+  mode, you normally only have the local filesystem or 1 HDFS DataNode, so you
+  don't want to roll logs constantly.</description>
+</property>
+<property>
+  <name>hbase.tmp.dir</name>
+  <value><%=hbase_tmp_dir%></value>
+  <description>Temporary directory on the local filesystem.</description>
+</property>
+
+
+<property>
+  <name>hbase.rootdir</name>
+  <value>hdfs://<%=namenode_name%>:54310<%=hbase_root_dir%></value>
+  <description>The directory shared by region servers.
+  Should be fully-qualified to include the filesystem to use.
+  E.g: hdfs://NAMENODE_SERVER:PORT/HBASE_ROOTDIR
+  </description>
+</property>
+
+<property>
+  <name>hbase.hregion.memstore.block.multiplier</name>
+  <value>8</value>
+  <description>number of memstore blocks
+  </description>
+</property>
+
+<property>
+  <name>hbase.hstore.blockingStoreFiles</name>
+  <value>15</value>
+  <description>number of store files
+  </description>
+</property>
+
+<property>
+  <name>hbase.regionserver.handler.count</name>
+  <value>30</value>
+  <description>number of concurrent handlers
+  </description>
+</property>
+
+
+
+
+<property>
+  <name>dfs.support.append</name>
+  <value>true</value>
+  <description>Allow append support (if you want to test data durability with HDFS)
+  </description>
+</property>
+
+<property>
+    <name>hbase.zookeeper.quorum</name>
+    <value><%= hdzooservers*", " %></value>
+</property>
+
+<property>
+    <name>hbase.hregion.max.filesize</name>
+    <value>1073741824</value>
+</property>
+
+<property>
+    <name>hbase.hregion.majorcompaction</name>
+    <value>0</value>
+</property>
+
+
+
+</configuration>
